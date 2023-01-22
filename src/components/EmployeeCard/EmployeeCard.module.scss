@@ -1,0 +1,254 @@
+@import '../../styles/settings.scss'; 
+
+// both run simultaneously at the start: 0.0s - 0.7s;
+// effect = background color is set
+$animation-slideDummyBackground-duration: 0.7s;
+$animation-setCardBackground-duration: $animation-slideDummyBackground-duration;
+// both run simultaneously once background is set: 0.7s - 2.0s 
+// effect = white block slides and reveals content
+$animation-slideMask-duration: 1.3s;
+$animation-slideMask-delay: $animation-setCardBackground-duration;
+$animation-showContent-duration: $animation-slideMask-duration;
+$animation-showContent-delay: $animation-slideMask-delay;
+// runs once the content is visible: 2.0s - 2.3s
+// effect = profile picture appears 
+$animation-showPicture-dutarion: 0.3s;
+$animation-showPicture-delay: calc($animation-showContent-duration + $animation-setCardBackground-duration);
+
+/* ---------- ANIMATIONS ---------- */
+
+.card {
+  position: relative;
+
+  width: 560px;
+  padding: 40px 40px 30px 40px;
+  background-color: $clr-lightblue;
+  border-radius: 30px;
+  color: $clr-light;
+  overflow: hidden;
+
+  animation: setCardBackground $animation-setCardBackground-duration;
+  animation-fill-mode: forwards;
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  width: 1300px;
+  height: 1300px;
+  top: -650px;
+  left: -650px;
+  border-radius: 50%;
+  background-color: $clr-lightblue;
+  
+  transform: scale(0);
+  visibility: hidden;
+
+  animation: slideDummyBackground $animation-slideDummyBackground-duration;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: $clr-light;
+  transform-origin: right;
+
+  transform: scaleX(0);
+  visibility: hidden;
+  
+  animation: slideMask $animation-slideMask-duration;
+  animation-delay: $animation-slideMask-delay;
+}
+
+.card {
+  .card__content, .card__options {
+    animation: showContent $animation-showContent-duration;
+    animation-delay: $animation-showContent-delay;
+    animation-fill-mode: backwards;
+  }
+}
+
+@keyframes setCardBackground { // works parallel with slideDummyBackground
+  0% { background-color: transparent; box-shadow: none; }
+  80% { background-color: transparent; box-shadow: none; } // looks best if starts once dummy background covers the card fully
+  99% { background-color: transparent; }
+  100% { background-color: $clr-lightblue; box-shadow: 0px 0px 50px 0px rgba(0, 0, 0, 0.1); }
+}
+
+@keyframes slideDummyBackground { // works parallel with setCardBackground
+  0% { visibility: visible; transform: scale(0); }
+  99% { visibility: visible; transform: scale(1); }
+  100% { visibility: hidden; }
+}
+
+@keyframes slideMask {
+  0% { visibility: visible; transform: scaleX(0); opacity: 1; }
+  25% { visibility: visible; transform: scaleX(1); opacity: 1; }
+  35% { visibility: visible; transform: scaleX(1); opacity: 1; }
+  100% { visibility: visible; transform: scaleX(1); opacity: 0; }
+}
+
+@keyframes showContent {
+  0%, 34% { opacity: 0; }
+  35%, 100% { opacity: 1; }
+}
+
+@keyframes showPicture {
+  0% { transform: scaleY(1); }
+  100% { transform: scaleY(0); }
+}
+
+/* ---------- REGULAR STYLES ---------- */
+
+.card {
+  display: flex;
+  justify-content: space-between;
+
+  .card__content {
+    display: flex;
+    flex-direction: column;
+
+    .card__personal {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      margin-bottom: 40px;
+
+      .card__personal-picture {
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        overflow: hidden;
+        position: relative;
+
+        .personal-image {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+      .card__personal-picture::after {
+        position: absolute;
+        content: '';
+        width: 100%;
+        height: 100%;
+        background-color: $clr-light;
+        top: 0;
+        left: 0;
+        
+        transform: scaleY(0);
+        transform-origin: bottom;
+
+        animation: showPicture $animation-showPicture-dutarion;
+        animation-delay: $animation-showPicture-delay;
+        animation-fill-mode: backwards;
+      }
+
+      .card__personal-name {
+        font-size: $fs-ee-name;
+        font-weight: $fw-heavy;
+      }
+    }
+
+    .card__role {
+      display: flex;
+      gap: 50px;
+      margin-bottom: 30px;
+      font-size: $fs-ee-role;
+      font-weight: $fw-regular;
+
+      .card__role-elem {
+        display: flex;
+        flex-direction: column;
+
+        .elem-name {
+          opacity: 0.7;
+        }
+      }
+    }
+
+    .card__id {
+      font-size: $fs-ee-id;
+      opacity: 0.4;
+    }
+  }
+
+  .card__options {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+
+    .options-add, .options-more {
+      width: 40px;
+      height: 40px;
+    }
+
+    .options-add {
+      background: none;
+      border: none;
+      font-size: $fs-ee-role;
+      color: $clr-light;
+      border-radius: 50%;
+      transition: 0.5s;
+      cursor: pointer;
+    }
+
+    .options-add:hover {
+      background-color: $clr-dark;
+    }
+
+    .options-more {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      
+      .options-more-handler {
+        font-size: $fs-ee-name;
+        transition: all 0.3s;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      .options-additional {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 5px;
+        transform-origin: bottom;
+        font-size: $fs-ee-role;
+        transform: scaleY(0);
+        transition: all 0.3s;
+    
+        i {
+          cursor: pointer;
+        }
+
+      }
+
+      .options-additional i:hover {
+        color: $clr-dark;
+      }
+    }
+
+    .options-more:hover .options-more-handler {
+      transform: rotate(90deg);
+    }
+    .options-more:hover .options-additional {
+      transform: scaleY(1);
+    }
+  }
+}

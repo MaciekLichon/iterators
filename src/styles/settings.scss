@@ -1,0 +1,29 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap');
+
+$clr-light: rgba(255, 255, 255, 1);
+$clr-dark: rgba(48, 55, 124, 1);
+$clr-lightblue: rgba(94, 167, 246, 1);
+
+$ff-regular: 'Roboto', sans-serif;
+$fw-light: 300;
+$fw-regular: 400;
+$fw-bold: 500;
+$fw-heavy: 700;
+
+// acc = account summary
+$fs-acc-arrow: 1.25rem;
+$fs-acc-header: 1rem;
+$fs-acc-title: 0.875rem;
+$fs-acc-date: 0.625rem;
+
+// ee = employee card
+$fs-ee-name: 1.75rem;
+$fs-ee-role: 1.25rem;
+$fs-ee-id: 0.75rem;
+
+
+body {
+  background-color: rgba(176, 196, 222, 1);
+  font-family: $ff-regular;
+  font-weight: $fw-regular;
+}
